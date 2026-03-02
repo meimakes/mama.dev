@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mama.dev — claim your handle</title>
+<meta name="description" content="claim your handle.">
+<meta property="og:title" content="mama.dev">
+<meta property="og:description" content="claim your handle.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mama.dev">
+<meta property="og:image" content="https://mama.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mama.dev/og.png">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --base: #1e1e2e;
+    --mantle: #181825;
+    --surface0: #313244;
+    --surface1: #45475a;
+    --text: #cdd6f4;
+    --subtext0: #a6adc8;
+    --subtext1: #bac2de;
+    --mauve: #cba6f7;
+    --pink: #f5c2e7;
+    --green: #a6e3a1;
+    --red: #f38ba8;
+    --peach: #fab387;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--base);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 60px 20px;
+  }
+  .container { max-width: 600px; width: 100%; }
+  h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  h1 span { color: var(--mauve); }
+  .tagline {
+    color: var(--subtext0);
+    font-size: 1rem;
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+  .tagline em { color: var(--pink); font-style: normal; }
+  .group { margin-bottom: 20px; }
+  .group label {
+    display: block;
+    color: var(--subtext0);
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+  }
+  .input-row {
+    display: flex;
+    align-items: center;
+  }
+  .input-prefix {
+    background: var(--surface0);
+    border: 1px solid var(--surface1);
+    border-right: none;
+    padding: 12px 14px;
+    color: var(--subtext0);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.95rem;
+    border-radius: 6px 0 0 6px;
+    white-space: nowrap;
+  }
+  input[type="text"], input[type="email"] {
+    background: var(--mantle);
+    border: 1px solid var(--surface1);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.95rem;
+    padding: 12px 14px;
+    width: 100%;
+    outline: none;
+  }
+  .handle-input { border-radius: 0 6px 6px 0; }
+  .full-input { border-radius: 6px; }
+  input:focus { border-color: var(--mauve); }
+  input::placeholder { color: var(--surface1); }
+  .status {
+    font-size: 0.8rem;
+    margin-top: 8px;
+    height: 20px;
+    transition: color 0.2s;
+  }
+  .status.available { color: var(--green); }
+  .status.taken { color: var(--red); }
+  .status.checking { color: var(--subtext0); }
+  .status.error { color: var(--red); }
+  textarea {
+    background: var(--mantle);
+    border: 1px solid var(--surface1);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    padding: 12px 14px;
+    width: 100%;
+    height: 80px;
+    outline: none;
+    border-radius: 6px;
+    resize: vertical;
+  }
+  textarea:focus { border-color: var(--mauve); }
+  textarea::placeholder { color: var(--surface1); }
+  button {
+    background: var(--mauve);
+    color: var(--base);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 8px;
+    transition: opacity 0.2s;
+  }
+  button:hover { opacity: 0.9; }
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .success {
+    display: none;
+    text-align: center;
+    padding: 20px 0;
+  }
+  .success-card {
+    background: var(--mantle);
+    border: 1px solid var(--surface0);
+    border-radius: 12px;
+    padding: 48px 32px;
+    margin-bottom: 24px;
+  }
+  .success-card .label {
+    color: var(--subtext0);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+  }
+  .success-card .handle-display {
+    color: var(--mauve);
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    word-break: break-all;
+  }
+  .success-card .checkmark {
+    color: var(--green);
+    font-size: 0.9rem;
+    margin-top: 16px;
+  }
+  .success-card .number {
+    color: var(--surface1);
+    font-size: 0.8rem;
+    margin-top: 12px;
+  }
+  .share-btn {
+    background: none;
+    border: 1px solid var(--surface1);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 8px;
+    transition: border-color 0.2s;
+  }
+  .share-btn:hover { border-color: var(--mauve); color: var(--mauve); }
+  .success-footer {
+    color: var(--surface1);
+    font-size: 0.75rem;
+    margin-top: 24px;
+  }
+  .validation-error {
+    color: var(--red);
+    font-size: 0.8rem;
+    margin-top: 4px;
+    display: none;
+  }
+  @media (max-width: 480px) {
+    body { padding: 40px 16px; }
+    h1 { font-size: 1.8rem; }
+    .tagline { font-size: 0.9rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div id="form-view">
+    <h1>mama<span>.</span>dev</h1>
+    <div class="tagline">
+      Claim your handle. <em>Tell us what to build.</em>
+    </div>
+
+    <form id="claim-form" autocomplete="off">
+      <div class="group">
+        <label for="handle">pick your handle</label>
+        <div class="input-row">
+          <div class="input-prefix">mama.dev/</div>
+          <input type="text" id="handle" class="handle-input" placeholder="yourname" maxlength="30" required>
+        </div>
+        <div id="handle-status" class="status"></div>
+        <div id="handle-error" class="validation-error"></div>
+      </div>
+
+      <div class="group">
+        <label for="email">your email</label>
+        <input type="email" id="email" class="full-input" placeholder="you@example.com" required>
+      </div>
+
+      <div class="group">
+        <label for="vision">what do we do here?</label>
+        <textarea id="vision" placeholder="profiles? challenges? leaderboard? something else entirely?"></textarea>
+      </div>
+
+      <button type="submit" id="submit-btn" disabled>claim my handle →</button>
+    </form>
+  </div>
+
+  <div id="success-view" class="success">
+    <div class="success-card">
+      <div class="label">claimed</div>
+      <div class="handle-display" id="claimed-handle"></div>
+      <div class="checkmark">✓ you're in</div>
+      <div class="number" id="claim-number"></div>
+    </div>
+    <button class="share-btn" id="share-x" onclick="shareToX()">share on 𝕏</button>
+    <div class="success-footer">profiles launching soon</div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var SUPABASE_URL = 'https://ozftoezkjyqzklahalxh.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_ob1ZK8rrcD90Z8mbaLqO8A_r7MBpVFx';
+
+  var handleInput = document.getElementById('handle');
+  var handleStatus = document.getElementById('handle-status');
+  var handleError = document.getElementById('handle-error');
+  var emailInput = document.getElementById('email');
+  var visionInput = document.getElementById('vision');
+  var submitBtn = document.getElementById('submit-btn');
+  var form = document.getElementById('claim-form');
+  var formView = document.getElementById('form-view');
+  var successView = document.getElementById('success-view');
+  var claimedHandle = document.getElementById('claimed-handle');
+
+  var handleAvailable = false;
+  var checkTimeout = null;
+
+  function sanitizeHandle(val) {
+    return val.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+  }
+
+  function validateHandle(val) {
+    if (val.length < 2) return 'at least 2 characters';
+    if (val.length > 30) return '30 characters max';
+    if (!/^[a-z0-9][a-z0-9_-]*[a-z0-9]$/.test(val) && val.length > 1) return 'letters, numbers, hyphens, underscores only';
+    return null;
+  }
+
+  async function checkAvailability(handle) {
+    handleStatus.className = 'status checking';
+    handleStatus.textContent = 'checking...';
+
+    try {
+      var res = await fetch(SUPABASE_URL + '/rest/v1/claims?handle=eq.' + encodeURIComponent(handle) + '&select=handle', {
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY
+        }
+      });
+      var data = await res.json();
+
+      if (data.length > 0) {
+        handleStatus.className = 'status taken';
+        handleStatus.textContent = '✗ mama.dev/' + handle + ' is taken';
+        handleAvailable = false;
+      } else {
+        handleStatus.className = 'status available';
+        handleStatus.textContent = '✓ mama.dev/' + handle + ' is available';
+        handleAvailable = true;
+      }
+    } catch (e) {
+      handleStatus.className = 'status error';
+      handleStatus.textContent = 'could not check — try again';
+      handleAvailable = false;
+    }
+
+    updateSubmit();
+  }
+
+  function updateSubmit() {
+    submitBtn.disabled = !(handleAvailable && emailInput.value.includes('@') && handleInput.value.length >= 2);
+  }
+
+  handleInput.addEventListener('input', function() {
+    var val = sanitizeHandle(this.value);
+    this.value = val;
+    handleAvailable = false;
+    handleError.style.display = 'none';
+    updateSubmit();
+
+    if (checkTimeout) clearTimeout(checkTimeout);
+
+    if (val.length < 2) {
+      handleStatus.className = 'status';
+      handleStatus.textContent = '';
+      return;
+    }
+
+    var err = validateHandle(val);
+    if (err) {
+      handleError.textContent = err;
+      handleError.style.display = 'block';
+      handleStatus.textContent = '';
+      return;
+    }
+
+    checkTimeout = setTimeout(function() {
+      checkAvailability(val);
+    }, 400);
+  });
+
+  emailInput.addEventListener('input', updateSubmit);
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    if (!handleAvailable) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'claiming...';
+
+    var handle = handleInput.value;
+    var email = emailInput.value;
+    var vision = visionInput.value;
+
+    try {
+      var res = await fetch(SUPABASE_URL + '/rest/v1/claims', {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+          handle: handle,
+          email: email,
+          vision: vision || null
+        })
+      });
+
+      if (res.ok) {
+        // Get claim count
+        try {
+          var countRes = await fetch(SUPABASE_URL + '/rest/v1/claims?select=id', {
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Prefer': 'count=exact' }
+          });
+          var countHeader = countRes.headers.get('content-range');
+          if (countHeader) {
+            var total = countHeader.split('/')[1];
+            document.getElementById('claim-number').textContent = '#' + total;
+          }
+        } catch(e) {}
+
+        formView.style.display = 'none';
+        successView.style.display = 'block';
+        claimedHandle.textContent = 'mama.dev/' + handle;
+      } else if (res.status === 409) {
+        var errBody = await res.json().catch(function() { return {}; });
+        if (errBody.message && errBody.message.indexOf('unique_email') > -1) {
+          handleStatus.className = 'status taken';
+          handleStatus.textContent = '✗ this email already claimed a handle';
+        } else {
+          handleStatus.className = 'status taken';
+          handleStatus.textContent = '✗ mama.dev/' + handle + ' was just claimed';
+        }
+        handleAvailable = false;
+        submitBtn.textContent = 'claim my handle →';
+        submitBtn.disabled = true;
+      } else {
+        throw new Error('unexpected status ' + res.status);
+      }
+    } catch (e) {
+      submitBtn.textContent = 'something went wrong — try again';
+      setTimeout(function() {
+        submitBtn.textContent = 'claim my handle →';
+        submitBtn.disabled = false;
+      }, 2000);
+    }
+  });
+})();
+
+function shareToX() {
+  var handle = document.getElementById('claimed-handle').textContent;
+  var text = 'just claimed ' + handle + ' ✓';
+  var url = 'https://mama.dev';
+  window.open('https://x.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url), '_blank');
+}
+</script>
+</body>
+</html>
